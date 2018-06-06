@@ -1,8 +1,7 @@
-# flutter_picture_app
+# Flutter Travel
 
-A new Flutter project.
+While traveling the best places share your photos and let us see the hidden places in the world.
 
-## Getting Started
+<h2><i>Still in development</i></h2>
 
-For help getting started with Flutter, view our online
-[documentation](https://flutter.io/).
+![resim2](https://user-images.githubusercontent.com/23746859/41042345-b682ae14-69a1-11e8-96ae-eef1ca1b6b27.png)
