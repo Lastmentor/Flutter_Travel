@@ -5,7 +5,6 @@ import 'package:image_picker/image_picker.dart';
 
 class Register extends StatefulWidget {
   static const String routeName = "/Register";
-
   @override
   _RegisterState createState() => new _RegisterState();
 }

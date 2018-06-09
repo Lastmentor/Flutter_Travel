@@ -1,5 +1,9 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_picture_app/menu.dart';
 import 'package:flutter_picture_app/register.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 void main() => runApp(new MyApp());
 
@@ -13,6 +17,12 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: new PicApp(),
+      routes: <String, WidgetBuilder>{
+        Register.routeName:(BuildContext context) =>
+        new Register(),
+        Menu.routeName: (BuildContext context) =>
+        new Menu(),
+      },
       debugShowCheckedModeBanner: false,
     );
   }
@@ -24,6 +34,38 @@ class PicApp extends StatefulWidget {
 }
 
 class _PicAppState extends State<PicApp> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final GoogleSignIn googleSignIn = new GoogleSignIn();
+
+  Future<FirebaseUser> signin() async {
+    GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
+    GoogleSignInAuthentication gSA = await googleSignInAccount.authentication;
+
+    FirebaseUser user = await _auth.signInWithGoogle(
+        idToken: gSA.idToken, accessToken: gSA.accessToken);
+
+    var _user = user;
+    _signout();
+    var route = new MaterialPageRoute(
+      builder: (BuildContext context) =>
+      new Menu(value: _user),
+    );
+    Navigator.of(context).push(route);
+    return user;
+  }
+
+  void _signout(){
+    googleSignIn.signOut();
+    print("User Signed Out");
+  }
+
+  void giris(){
+    final user = signin();
+    if(user!=null){
+      _menu;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -110,7 +152,7 @@ class _PicAppState extends State<PicApp> {
                             width: 300.0,
                             height: 55.0,
                             child: new RaisedButton(
-                              onPressed: _alertDialog,
+                              onPressed: _menu,
                               child: new Text("GO",style: new TextStyle(color: Colors.white,fontSize: 20.0)),
                               color: const Color(0xFF006633),
                               shape: new RoundedRectangleBorder(
@@ -190,7 +232,7 @@ class _PicAppState extends State<PicApp> {
                               ),
                             ),
                             new GestureDetector(
-                              onTap: _alertDialog,
+                              onTap: giris,
                               child: new Container(
                                 width: 45.0,
                                 height: 45.0,
@@ -211,10 +253,7 @@ class _PicAppState extends State<PicApp> {
                           children: <Widget>[
                             new Text("Don't have an account?",style: new TextStyle(color: Colors.white,fontSize: 15.0),),
                             new GestureDetector(
-                                onTap: () {
-                                  Navigator.push(context, new MaterialPageRoute(
-                                      builder: (context) => new Register()));
-                                },
+                                onTap: _register,
                                 child:  new Text("Sign Up",style: new TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 15.0,decoration: TextDecoration.underline),)
                             ),
                           ],
@@ -229,6 +268,7 @@ class _PicAppState extends State<PicApp> {
       ),
     );
   }
+
   void _alertDialog(){
     AlertDialog dialog = new AlertDialog(
       content: new Text("Başarılı",textAlign: TextAlign.center,),
@@ -237,6 +277,14 @@ class _PicAppState extends State<PicApp> {
       ],
     );
     showDialog(context: context, child: dialog);
+  }
+
+  void _menu(){
+    Navigator.of(context).pushNamed(Menu.routeName);
+  }
+
+  void _register(){
+    Navigator.of(context).pushNamed(Register.routeName);
   }
 }
 

@@ -1,0 +1,59 @@
+{
+  "project_info": {
+    "project_number": "662311803136",
+    "firebase_url": "https://fir-storage-458d7.firebaseio.com",
+    "project_id": "fir-storage-458d7",
+    "storage_bucket": "fir-storage-458d7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:662311803136:android:b5e49c082bff9e9e",
+        "android_client_info": {
+          "package_name": "lastmentor.travel"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "662311803136-v7lf3h6biuvgqfn471c43batqpqh8ifq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "lastmentor.travel",
+            "certificate_hash": "64e40ee5be0fd9f805ac57511c9a0b6006b72f61"
+          }
+        },
+        {
+          "client_id": "662311803136-7ji578rqd3e3mv61fp04efhak6lbs8js.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "662311803136-7ji578rqd3e3mv61fp04efhak6lbs8js.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBF3XspUvQXsDSbKJyhX2gYCbvi5rQW9lc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "662311803136-7ji578rqd3e3mv61fp04efhak6lbs8js.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
