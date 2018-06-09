@@ -4,8 +4,11 @@ import 'package:flutter_picture_app/menu.dart';
 import 'package:flutter_picture_app/register.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter_twitter_login/flutter_twitter_login.dart';
 
 void main() => runApp(new MyApp());
+
+final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -34,14 +37,61 @@ class PicApp extends StatefulWidget {
 }
 
 class _PicAppState extends State<PicApp> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  FirebaseUser _currentUser;
+  TwitterLoginResult _twitterLoginResult;
+  TwitterLoginStatus _twitterLoginStatus;
+  TwitterSession _currentUserTwitterSession;
+
+  // Twitter Sign-in
+  Future<FirebaseUser> _handleTwitterSignIn() async {
+    String snackBarMessage = '';
+
+    final TwitterLogin twitterLogin = new TwitterLogin(
+        consumerKey: '7zZ3gFiyomYWBfQe7NAqrjcQL',
+        consumerSecret: '2vSWEeYbdtTAEjm1Qwi6D8Qb4jkZzDsjQPBadaT5n8ZYi3hGz6'
+    );
+
+    _twitterLoginResult = await twitterLogin.authorize();
+    _currentUserTwitterSession = _twitterLoginResult.session;
+    _twitterLoginStatus = _twitterLoginResult.status;
+
+    switch (_twitterLoginStatus) {
+      case TwitterLoginStatus.loggedIn:
+        _currentUserTwitterSession = _twitterLoginResult.session;
+        snackBarMessage = 'Successfully signed in as';
+        break;
+
+      case TwitterLoginStatus.cancelledByUser:
+        snackBarMessage = 'Sign in cancelled by user.';
+        break;
+
+      case TwitterLoginStatus.error:
+        snackBarMessage = 'An error occurred signing with Twitter.';
+        break;
+    }
+
+    _currentUser = await _firebaseAuth.signInWithTwitter(
+        authToken: _currentUserTwitterSession?.token ?? '',
+        authTokenSecret: _currentUserTwitterSession?.secret ?? ''
+    );
+
+    var _user = _currentUser;
+    var route = new MaterialPageRoute(
+      builder: (BuildContext context) =>
+      new Menu(value: _user),
+    );
+    Navigator.of(context).push(route);
+    return _currentUser;
+  }
+
   final GoogleSignIn googleSignIn = new GoogleSignIn();
 
+  // Google Sign-in
   Future<FirebaseUser> signin() async {
     GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
     GoogleSignInAuthentication gSA = await googleSignInAccount.authentication;
 
-    FirebaseUser user = await _auth.signInWithGoogle(
+    FirebaseUser user = await _firebaseAuth.signInWithGoogle(
         idToken: gSA.idToken, accessToken: gSA.accessToken);
 
     var _user = user;
@@ -61,6 +111,13 @@ class _PicAppState extends State<PicApp> {
 
   void giris(){
     final user = signin();
+    if(user!=null){
+      _menu;
+    }
+  }
+
+  void giris_twitter(){
+    final user = _handleTwitterSignIn();
     if(user!=null){
       _menu;
     }
@@ -218,7 +275,7 @@ class _PicAppState extends State<PicApp> {
                               ),
                             ),
                             new GestureDetector(
-                              onTap: _alertDialog,
+                              onTap: giris_twitter,
                               child: new Container(
                                 width: 45.0,
                                 height: 45.0,

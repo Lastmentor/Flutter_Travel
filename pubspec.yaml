@@ -12,6 +12,7 @@ dependencies:
   firebase_auth:
   google_sign_in:
   firebase_database:
+  flutter_twitter_login:
 
 dev_dependencies:
   flutter_test:
