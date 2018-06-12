@@ -13,6 +13,8 @@ dependencies:
   google_sign_in:
   firebase_database:
   flutter_twitter_login:
+  cloud_firestore:
+  firebase_storage:
 
 dev_dependencies:
   flutter_test:

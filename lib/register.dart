@@ -2,6 +2,9 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'dart:math';
 
 class Register extends StatefulWidget {
   static const String routeName = "/Register";
@@ -10,7 +13,6 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
-
   File _image;
 
   Future getImage() async {
@@ -20,6 +22,12 @@ class _RegisterState extends State<Register> {
       _image = image;
     });
   }
+
+  final _nametextfield = new TextEditingController();
+  final _usernametextfield = new TextEditingController();
+  final _emailtextfield = new TextEditingController();
+  final _passwordtextfield = new TextEditingController();
+  final _repeatpasswordtextfield = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -101,6 +109,7 @@ class _RegisterState extends State<Register> {
                               leading: const Icon(Icons.person_add,
                                   color: Colors.white),
                               title: new TextField(
+                                controller: _nametextfield,
                                 style: new TextStyle(
                                   color: Colors.white,
                                   fontSize: 18.0,
@@ -130,6 +139,7 @@ class _RegisterState extends State<Register> {
                               leading:
                                   const Icon(Icons.mail, color: Colors.white),
                               title: new TextField(
+                                controller: _emailtextfield,
                                 style: new TextStyle(
                                   color: Colors.white,
                                   fontSize: 18.0,
@@ -159,6 +169,7 @@ class _RegisterState extends State<Register> {
                               leading:
                                   const Icon(Icons.person, color: Colors.white),
                               title: new TextField(
+                                controller: _usernametextfield,
                                 style: new TextStyle(
                                   color: Colors.white,
                                   fontSize: 18.0,
@@ -188,6 +199,7 @@ class _RegisterState extends State<Register> {
                               leading:
                                   const Icon(Icons.lock, color: Colors.white),
                               title: new TextField(
+                                controller: _passwordtextfield,
                                 style: new TextStyle(
                                   color: Colors.white,
                                   fontSize: 18.0,
@@ -218,6 +230,7 @@ class _RegisterState extends State<Register> {
                               leading:
                                   const Icon(Icons.lock, color: Colors.white),
                               title: new TextField(
+                                controller: _repeatpasswordtextfield,
                                 style: new TextStyle(
                                   color: Colors.white,
                                   fontSize: 18.0,
@@ -239,7 +252,7 @@ class _RegisterState extends State<Register> {
                         width: 300.0,
                         height: 55.0,
                         child: new RaisedButton(
-                          onPressed: _alertDialog,
+                          onPressed: _addData,
                           child: new Text("CREATE ACCOUNT",
                               style: new TextStyle(
                                   color: Colors.white, fontSize: 20.0)),
@@ -259,16 +272,36 @@ class _RegisterState extends State<Register> {
     );
   }
 
-  void _alertDialog() {
+  void _addData() async {
+    if(_emailtextfield.text != "" && _nametextfield.text != "" && _passwordtextfield.text != "" && _usernametextfield.text != "" && _repeatpasswordtextfield.text != "" && _image != null){
+      final String rand1 = "${new Random().nextInt(10000)}";
+      final String rand2 = "${new Random().nextInt(10000)}";
+      final String rand3 = "${new Random().nextInt(10000)}";
+      final StorageReference ref = FirebaseStorage.instance.ref().child('${rand1}_${rand2}_${rand3}.jpg');
+      final StorageUploadTask uploadTask = ref.put(_image);
+      final Uri downloadUrl = (await uploadTask.future).downloadUrl;
+
+      Firestore.instance.collection('Accounts').document()
+          .setData({ 'email': _emailtextfield.text, 'name': _nametextfield.text, 'password': _passwordtextfield.text, 'photo': downloadUrl.toString() , 'username': _usernametextfield.text});
+
+      _emailtextfield.text = "";
+      _nametextfield.text = "";
+      _passwordtextfield.text = "";
+      _usernametextfield.text = "";
+      _repeatpasswordtextfield.text = "";
+      setState(() {
+        _image = null;
+      });
+    }else {
+      _alertDialog();
+    }
+  }
+
+  void _alertDialog(){
     AlertDialog dialog = new AlertDialog(
-      content: new Text(
-        "Başarılı",
-        textAlign: TextAlign.center,
-      ),
+      content: new Text("Fill All The Blanks",textAlign: TextAlign.center,),
       actions: <Widget>[
-        new FlatButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: new Text("OK")),
+        new FlatButton(onPressed: () => Navigator.of(context).pop(), child: new Text("OK")),
       ],
     );
     showDialog(context: context, child: dialog);
