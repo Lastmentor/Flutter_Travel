@@ -13,6 +13,8 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
+  final DocumentReference documentReference = Firestore.instance.collection('Accounts').document();
+
   File _image;
 
   Future getImage() async {
@@ -274,24 +276,27 @@ class _RegisterState extends State<Register> {
 
   void _addData() async {
     if(_emailtextfield.text != "" && _nametextfield.text != "" && _passwordtextfield.text != "" && _usernametextfield.text != "" && _repeatpasswordtextfield.text != "" && _image != null){
-      final String rand1 = "${new Random().nextInt(10000)}";
-      final String rand2 = "${new Random().nextInt(10000)}";
-      final String rand3 = "${new Random().nextInt(10000)}";
-      final StorageReference ref = FirebaseStorage.instance.ref().child('${rand1}_${rand2}_${rand3}.jpg');
-      final StorageUploadTask uploadTask = ref.put(_image);
-      final Uri downloadUrl = (await uploadTask.future).downloadUrl;
+      if(_passwordtextfield.text == _repeatpasswordtextfield.text){
+        final String rand1 = "${new Random().nextInt(10000)}";
+        final String rand2 = "${new Random().nextInt(10000)}";
+        final String rand3 = "${new Random().nextInt(10000)}";
+        final StorageReference ref = FirebaseStorage.instance.ref().child('${rand1}_${rand2}_${rand3}.jpg');
+        final StorageUploadTask uploadTask = ref.put(_image);
+        final Uri downloadUrl = (await uploadTask.future).downloadUrl;
 
-      Firestore.instance.collection('Accounts').document()
-          .setData({ 'email': _emailtextfield.text, 'name': _nametextfield.text, 'password': _passwordtextfield.text, 'photo': downloadUrl.toString() , 'username': _usernametextfield.text});
+        documentReference.setData({ 'email': _emailtextfield.text, 'name': _nametextfield.text, 'password': _passwordtextfield.text, 'photo': downloadUrl.toString() , 'username': _usernametextfield.text});
 
-      _emailtextfield.text = "";
-      _nametextfield.text = "";
-      _passwordtextfield.text = "";
-      _usernametextfield.text = "";
-      _repeatpasswordtextfield.text = "";
-      setState(() {
-        _image = null;
-      });
+        _emailtextfield.text = "";
+        _nametextfield.text = "";
+        _passwordtextfield.text = "";
+        _usernametextfield.text = "";
+        _repeatpasswordtextfield.text = "";
+        setState(() {
+          _image = null;
+        });
+      }else{
+        _alertDialog2();
+      }
     }else {
       _alertDialog();
     }
@@ -300,6 +305,16 @@ class _RegisterState extends State<Register> {
   void _alertDialog(){
     AlertDialog dialog = new AlertDialog(
       content: new Text("Fill All The Blanks",textAlign: TextAlign.center,),
+      actions: <Widget>[
+        new FlatButton(onPressed: () => Navigator.of(context).pop(), child: new Text("OK")),
+      ],
+    );
+    showDialog(context: context, child: dialog);
+  }
+
+  void _alertDialog2(){
+    AlertDialog dialog = new AlertDialog(
+      content: new Text("Passwords Are Not Same",textAlign: TextAlign.center,),
       actions: <Widget>[
         new FlatButton(onPressed: () => Navigator.of(context).pop(), child: new Text("OK")),
       ],
