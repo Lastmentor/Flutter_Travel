@@ -17,7 +17,13 @@ class _MenuState extends State<Menu> {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text("Travel"),
+        title: new Text("Flutter Travel"),
+        centerTitle: true,
+        actions: <Widget>[
+          new IconButton(icon: new Icon(Icons.power_settings_new,), onPressed: () {
+            Navigator.of(context).pop();
+          })
+        ],
       ),
       drawer: new Drawer(
         child: new ListView(
@@ -49,24 +55,44 @@ class _MenuState extends State<Menu> {
                 image: new DecorationImage(
                   fit: BoxFit.fill,
                   image: new NetworkImage(
-                      "https://bilgibirikimi.net/wp-content/uploads/2012/04/izmir-saat-kulesi.jpg"
+                      "https://www.duvarkapla.com/media/catalog/product/cache/9/image/750x/17f82f742ffe127f42dca9de82fb58b1/T/R/TR0149.jpg"
                   ),
                 ),
               ),
-            )
+            ),
+            new ListTile(
+              leading: new Icon(Icons.add,color: Colors.blue,),
+              title: new Text("Share Post"),
+            ),
+            new ListTile(
+              leading: new Icon(Icons.account_box,color: Colors.green,),
+              title: new Text("My Shared"),
+            ),
+            new Divider(color: Colors.grey,),
+            new ListTile(
+              leading: new Icon(Icons.home,color: Colors.pink,),
+              title: new Text("All"),
+            ),
+            new ListTile(
+              leading: new Icon(Icons.photo_library,color: Colors.orange,),
+              title: new Text("Photos"),
+            ),
+            new ListTile(
+              leading: new Icon(Icons.local_movies,color: Colors.green,),
+              title: new Text("Videos"),
+            ),
+            new ListTile(
+              leading: new Icon(Icons.notifications,color: Colors.purple,),
+              title: new Text("Notifications"),
+            ),
+            new Divider(color: Colors.grey,),
+            new ListTile(
+              leading: new Icon(Icons.info,color: Colors.blue),
+              title: new Text("About Us"),
+            ),
           ],
         ),
       ),
-      body: new Center(
-        child: new RaisedButton(
-          onPressed: _cikis,
-          child: new Text("Sign Out",style: new TextStyle(color: Colors.red,fontWeight: FontWeight.bold),),
-        ),
-      ),
     );
-  }
-
-  void _cikis() {
-    Navigator.of(context).pop();
   }
 }
