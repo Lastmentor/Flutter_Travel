@@ -15,6 +15,7 @@ dependencies:
   flutter_twitter_login:
   cloud_firestore:
   firebase_storage:
+  flutter_staggered_grid_view:
 
 dev_dependencies:
   flutter_test:
@@ -38,6 +39,7 @@ flutter:
    - images/twitter.png
    - images/logo.png
    - images/google.png
+   - images/wallfy.png
   # To add assets to your application, add an assets section, like this:
   # assets:
   #  - images/a_dot_burr.jpeg
