@@ -25,7 +25,7 @@ class _MenuState extends State<Menu> {
 
   StreamSubscription<QuerySnapshot> subscription;
   List<DocumentSnapshot> wallpapersList;
-  final CollectionReference collectionReference = Firestore.instance.collection("Wallpaper");
+  final CollectionReference collectionReference = Firestore.instance.collection("Shared");
 
   @override
   void initState() {
@@ -97,7 +97,7 @@ class _MenuState extends State<Menu> {
               onTap: () {
                 _onPress();
                 Navigator.push(context, new MaterialPageRoute(
-                    builder: (context) => new SharePost()));
+                    builder: (context) => new SharePost(value:widget.value)));
               },
             ),
             new ListTile(
@@ -179,7 +179,7 @@ class _MenuState extends State<Menu> {
               onTap: () {
                 _onPress();
                 Navigator.push(context, new MaterialPageRoute(
-                    builder: (context) => new SharePost()));
+                    builder: (context) => new SharePost(accountEmail:widget.accountEmail)));
               },
             ),
             new ListTile(
@@ -262,18 +262,21 @@ class _MenuState extends State<Menu> {
       _onPress();
     });
   }
+
   void _stateAll() {
     setState((){
       title='All';
       _onPress();
     });
   }
+
   void _statePhotos() {
     setState((){
       title='Photos';
       _onPress();
     });
   }
+
   void _stateVideos() {
     setState((){
       title='Videos';
