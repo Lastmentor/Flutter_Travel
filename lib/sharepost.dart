@@ -1,33 +1,26 @@
 import 'dart:async';
 import 'dart:io';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'dart:math';
 
 class SharePost extends StatefulWidget {
+
+  final FirebaseUser value;
+  String accountEmail;
+
+  SharePost({Key key,this.value,this.accountEmail}) : super(key:key);
+
   @override
   _SharePostState createState() => new _SharePostState();
 }
 
 class _SharePostState extends State<SharePost> {
 
-  String _value = null;
-  List<String> _values = new List<String>();
-
-  @override
-  void initState() {
-    _values.addAll([
-      "Image",
-      "Video",
-    ]);
-    _value = _values.elementAt(0);
-  }
-
-  void _onChangged(String value) {
-    setState(() {
-      _value = value;
-    });
-  }
+  final DocumentReference documentReference = Firestore.instance.collection('Shared').document();
 
   File _image;
 
@@ -45,9 +38,10 @@ class _SharePostState extends State<SharePost> {
   Widget build(BuildContext context) {
     return new MaterialApp(
       theme: new ThemeData(
-        primaryColor: Colors.blue,
+        primaryColor: const Color(0xFF006400),
         primarySwatch: Colors.green,
       ),
+      debugShowCheckedModeBanner: false,
       home: new Scaffold(
         appBar: new AppBar(
           leading: new IconButton(
@@ -56,7 +50,7 @@ class _SharePostState extends State<SharePost> {
               ),
               onPressed: _back
           ),
-          title: new Text('Share Post'),
+          title: new Text('Upload Image'),
         ),
         body: new ListView(
           padding: new EdgeInsets.all(32.0),
@@ -64,31 +58,9 @@ class _SharePostState extends State<SharePost> {
             new Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                new Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    new Text(
-                      "Konu :",
-                      style: new TextStyle(fontSize: 20.0),
-                    ),
-                    new DropdownButton(
-                      value: _value,
-                      items: _values.map((String value) {
-                        return new DropdownMenuItem(
-                            value: value,
-                            child: new Row(
-                              children: <Widget>[new Text('${value}')],
-                            ));
-                      }).toList(),
-                      onChanged: (String value) {
-                        _onChangged(value);
-                      },
-                    ),
-                  ],
-                ),
                 new TextField(
                   decoration: new InputDecoration(
-                    labelText: 'Açıklama Girin',
+                    labelText: 'Add Information',
                   ),
                   controller: textfield,
                 ),
@@ -105,7 +77,7 @@ class _SharePostState extends State<SharePost> {
                       minWidth: 140.0,
                       color: Colors.green,
                       textColor: Colors.white,
-                      child: new Text("Pick Image"),
+                      child: new Text("Select an Image"),
                       splashColor: Colors.redAccent,
                     ),
               ],
@@ -113,8 +85,8 @@ class _SharePostState extends State<SharePost> {
           ],
         ),
         floatingActionButton: new FloatingActionButton(
-          onPressed: _back,
-          tooltip: 'Share Post',
+          onPressed: _addData,
+          tooltip: 'Upload Image',
           child: new Icon(Icons.send),
         ),
       ),
@@ -123,5 +95,24 @@ class _SharePostState extends State<SharePost> {
 
   void _back() {
     Navigator.of(context).pop();
+  }
+
+  void _addData() async {
+    String realEmail;
+    widget.accountEmail == null ? realEmail = widget.value.email : realEmail = widget.accountEmail;
+    var now = new DateTime.now();
+    final String rand1 = "${new Random().nextInt(10000)}";
+    final String rand2 = "${new Random().nextInt(10000)}";
+    final String rand3 = "${new Random().nextInt(10000)}";
+    final StorageReference ref = FirebaseStorage.instance.ref().child('${rand1}_${rand2}_${rand3}.jpg');
+    final StorageUploadTask uploadTask = ref.put(_image);
+    final Uri downloadUrl = (await uploadTask.future).downloadUrl;
+
+    documentReference.setData({'email': realEmail, 'text': textfield.text, 'time': now.toString().substring(0,16), 'url': downloadUrl.toString()});
+
+    textfield.text = "";
+    setState(() {
+      _image = null;
+    });
   }
 }
