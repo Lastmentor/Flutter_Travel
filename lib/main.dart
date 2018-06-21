@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_picture_app/about.dart';
 import 'package:flutter_picture_app/menu.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_picture_app/register.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -25,6 +27,8 @@ class MyApp extends StatelessWidget {
         new Register(),
         Menu.routeName: (BuildContext context) =>
         new Menu(),
+        AboutUs.routeName: (BuildContext context) =>
+        new AboutUs(),
       },
       debugShowCheckedModeBanner: false,
     );
@@ -37,6 +41,32 @@ class PicApp extends StatefulWidget {
 }
 
 class _PicAppState extends State<PicApp> {
+
+  List accountlist;
+
+  StreamSubscription<QuerySnapshot> subscription;
+  List<DocumentSnapshot> wallpapersList;
+  final CollectionReference collectionReference = Firestore.instance.collection("Accounts");
+
+  @override
+  void initState() {
+    super.initState();
+    subscription = collectionReference.snapshots().listen((datasnapshot) {
+      setState(() {
+        wallpapersList = datasnapshot.documents;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    subscription?.cancel();
+    super.dispose();
+  }
+
+  final _usernametextfield = new TextEditingController();
+  final _passwordtextfield = new TextEditingController();
+
   FirebaseUser _currentUser;
   TwitterLoginResult _twitterLoginResult;
   TwitterLoginStatus _twitterLoginStatus;
@@ -165,6 +195,7 @@ class _PicAppState extends State<PicApp> {
                                 child: new ListTile(
                                   leading: const Icon(Icons.person,color: Colors.white),
                                   title: new TextField(
+                                    controller: _usernametextfield,
                                     style: new TextStyle(color: Colors.white,fontSize: 18.0,),
                                     decoration: new InputDecoration(
                                       border: InputBorder.none,
@@ -190,6 +221,7 @@ class _PicAppState extends State<PicApp> {
                                 child: new ListTile(
                                   leading: const Icon(Icons.lock,color: Colors.white),
                                   title: new TextField(
+                                    controller: _passwordtextfield,
                                     style: new TextStyle(color: Colors.white,fontSize: 18.0,),
                                     decoration: new InputDecoration(
                                       border: InputBorder.none,
@@ -209,7 +241,7 @@ class _PicAppState extends State<PicApp> {
                             width: 300.0,
                             height: 55.0,
                             child: new RaisedButton(
-                              onPressed: _menu,
+                              onPressed: _accountLogIn,
                               child: new Text("GO",style: new TextStyle(color: Colors.white,fontSize: 20.0)),
                               color: const Color(0xFF006633),
                               shape: new RoundedRectangleBorder(
@@ -336,12 +368,42 @@ class _PicAppState extends State<PicApp> {
     showDialog(context: context, child: dialog);
   }
 
+  void _logInDialog(){
+    AlertDialog dialog = new AlertDialog(
+      content: new Text("Username or Password Wrong!",textAlign: TextAlign.center,),
+      actions: <Widget>[
+        new FlatButton(onPressed: () => Navigator.of(context).pop(), child: new Text("OK")),
+      ],
+    );
+    showDialog(context: context, child: dialog);
+  }
+
   void _menu(){
     Navigator.of(context).pushNamed(Menu.routeName);
   }
 
   void _register(){
     Navigator.of(context).pushNamed(Register.routeName);
+  }
+
+  void _accountLogIn(){
+    String photo,email,name;
+    bool tempLog = false;
+    String realAccount = _usernametextfield.text + _passwordtextfield.text;
+    for(int i=0;i<wallpapersList.length;i++){
+      String tempAccount = wallpapersList[i].data['username'] + wallpapersList[i].data['password'];
+      if(realAccount == tempAccount){
+        tempLog = true;
+        photo = wallpapersList[i].data['photo'];
+        email = wallpapersList[i].data['email'];
+        name = wallpapersList[i].data['name'];
+        break;
+      }
+    }
+    _usernametextfield.text = "";
+    _passwordtextfield.text = "";
+    tempLog == false ? _logInDialog() : Navigator.push(context,
+        new MaterialPageRoute(builder: (context) => new Menu(accountPhoto:photo,accountEmail:email,accountName:name)));
   }
 }
 
