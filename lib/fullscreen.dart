@@ -5,19 +5,13 @@ class ImagePage extends StatelessWidget {
   String imgPath;
   ImagePage(this.imgPath);
 
-  final LinearGradient gradient = new LinearGradient(
-      colors: [new Color(0x10000000),new Color(0x30000000)],
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight
-  );
-
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
       body: new SizedBox.expand(
         child: new Container(
           decoration: new BoxDecoration(
-            gradient: gradient,
+            color: Colors.black,
           ),
           child: new Stack(
             children: <Widget>[
