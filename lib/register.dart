@@ -13,6 +13,9 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
+
+  bool checkUpload = false;
+
   final DocumentReference documentReference = Firestore.instance.collection('Accounts').document();
 
   File _image;
@@ -277,6 +280,9 @@ class _RegisterState extends State<Register> {
   void _addData() async {
     if(_emailtextfield.text != "" && _nametextfield.text != "" && _passwordtextfield.text != "" && _usernametextfield.text != "" && _repeatpasswordtextfield.text != "" && _image != null){
       if(_passwordtextfield.text == _repeatpasswordtextfield.text){
+
+        _uploadDialog();
+
         final String rand1 = "${new Random().nextInt(10000)}";
         final String rand2 = "${new Random().nextInt(10000)}";
         final String rand3 = "${new Random().nextInt(10000)}";
@@ -285,6 +291,8 @@ class _RegisterState extends State<Register> {
         final Uri downloadUrl = (await uploadTask.future).downloadUrl;
 
         documentReference.setData({ 'email': _emailtextfield.text, 'name': _nametextfield.text, 'password': _passwordtextfield.text, 'photo': downloadUrl.toString() , 'username': _usernametextfield.text});
+
+        _doneDialog();
 
         _emailtextfield.text = "";
         _nametextfield.text = "";
@@ -320,5 +328,49 @@ class _RegisterState extends State<Register> {
       ],
     );
     showDialog(context: context, child: dialog);
+  }
+
+  void _uploadDialog() {
+    if(checkUpload == false){
+      showDialog(context: context, barrierDismissible: false, child: new Dialog(
+          child:  new Container(
+            width: 233.0,
+            height: 233.0,
+            decoration: new BoxDecoration(
+              color: Colors.white,
+              border: new Border.all(color: Colors.white),
+            ),
+            child: new Center(
+              child: new Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  new CircularProgressIndicator(),
+                  new Padding(padding: const EdgeInsets.only(top: 17.0)),
+                  new Text("Account Creating ...",style: new TextStyle(color: Colors.blue,fontSize: 20.0)),
+                ],
+              ),
+            ),
+          )
+      ),);
+    }
+    else {
+      Navigator.of(context).pop();
+    }
+  }
+
+  void _doneDialog(){
+    setState((){
+      checkUpload = true;
+    });
+    _uploadDialog();
+    AlertDialog dialog = new AlertDialog(
+      content: new Text("Successfully Created!",textAlign: TextAlign.center),
+      actions: <Widget>[
+        new FlatButton(onPressed: () => Navigator.of(context).pop(), child: new Text("Close")),
+      ],
+    );
+    showDialog(context: context, barrierDismissible: false, child: dialog);
+    checkUpload = false;
   }
 }

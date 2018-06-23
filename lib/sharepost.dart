@@ -10,7 +10,7 @@ import 'dart:math';
 class SharePost extends StatefulWidget {
 
   final FirebaseUser value;
-  String accountEmail;
+  final String accountEmail;
 
   SharePost({Key key,this.value,this.accountEmail}) : super(key:key);
 
@@ -23,6 +23,7 @@ class _SharePostState extends State<SharePost> {
   final DocumentReference documentReference = Firestore.instance.collection('Shared').document();
 
   File _image;
+  bool checkUpload = false;
 
   Future getImage() async {
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
@@ -37,13 +38,10 @@ class _SharePostState extends State<SharePost> {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-      theme: new ThemeData(
-        primaryColor: const Color(0xFF006400),
-        primarySwatch: Colors.green,
-      ),
       debugShowCheckedModeBanner: false,
       home: new Scaffold(
         appBar: new AppBar(
+          backgroundColor: const Color(0xFF003333),
           leading: new IconButton(
               icon: new Icon(
                   Icons.arrow_back_ios
@@ -75,10 +73,9 @@ class _SharePostState extends State<SharePost> {
                       onPressed: getImage,
                       height: 40.0,
                       minWidth: 140.0,
-                      color: Colors.green,
+                      color: const Color(0xFF006633),
                       textColor: Colors.white,
                       child: new Text("Select an Image"),
-                      splashColor: Colors.redAccent,
                     ),
               ],
             )
@@ -86,6 +83,7 @@ class _SharePostState extends State<SharePost> {
         ),
         floatingActionButton: new FloatingActionButton(
           onPressed: _addData,
+          backgroundColor: const Color(0xFF006633),
           tooltip: 'Upload Image',
           child: new Icon(Icons.send),
         ),
@@ -98,6 +96,8 @@ class _SharePostState extends State<SharePost> {
   }
 
   void _addData() async {
+    _uploadDialog();
+
     String realEmail;
     widget.accountEmail == null ? realEmail = widget.value.email : realEmail = widget.accountEmail;
     var now = new DateTime.now();
@@ -110,9 +110,55 @@ class _SharePostState extends State<SharePost> {
 
     documentReference.setData({'email': realEmail, 'text': textfield.text, 'time': now.toString().substring(0,16), 'url': downloadUrl.toString()});
 
+    _doneDialog();
+
     textfield.text = "";
     setState(() {
       _image = null;
     });
+  }
+
+  void _uploadDialog() {
+    if(checkUpload == false){
+      showDialog(context: context, barrierDismissible: false, child: new Dialog(
+          child:  new Container(
+            width: 233.0,
+            height: 233.0,
+            decoration: new BoxDecoration(
+              color: Colors.white,
+              border: new Border.all(color: Colors.white),
+            ),
+            child: new Center(
+              child: new Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  new CircularProgressIndicator(),
+                  new Padding(padding: const EdgeInsets.only(top: 17.0)),
+                  new Text("Uploading Image ...",style: new TextStyle(color: Colors.blue,fontSize: 20.0)),
+                ],
+              ),
+            ),
+          )
+      ),);
+    }
+    else {
+      Navigator.of(context).pop();
+    }
+  }
+
+  void _doneDialog(){
+    setState((){
+      checkUpload = true;
+    });
+    _uploadDialog();
+    AlertDialog dialog = new AlertDialog(
+      content: new Text("Upload Completed!",textAlign: TextAlign.center),
+      actions: <Widget>[
+        new FlatButton(onPressed: () => Navigator.of(context).pop(), child: new Text("Close")),
+      ],
+    );
+    showDialog(context: context, barrierDismissible: false, child: dialog);
+    checkUpload = false;
   }
 }
