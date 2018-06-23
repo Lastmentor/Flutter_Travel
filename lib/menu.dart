@@ -47,6 +47,7 @@ class _MenuState extends State<Menu> {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
+        backgroundColor: const Color(0xFF003333),
         title: new Text("$title"),
         centerTitle: true,
         actions: <Widget>[
@@ -120,6 +121,11 @@ class _MenuState extends State<Menu> {
               leading: new Icon(Icons.local_movies,color: Colors.green,),
               title: new Text("Videos"),
               onTap: _stateVideos,
+            ),
+            new ListTile(
+              leading: new Icon(Icons.favorite,color: Colors.red,),
+              title: new Text("Favorites"),
+              onTap: _stateFavorites,
             ),
             new ListTile(
               leading: new Icon(Icons.notifications,color: Colors.purple,),
@@ -204,6 +210,11 @@ class _MenuState extends State<Menu> {
               onTap: _stateVideos,
             ),
             new ListTile(
+              leading: new Icon(Icons.favorite,color: Colors.red,),
+              title: new Text("Favorites"),
+              onTap: _stateFavorites,
+            ),
+            new ListTile(
               leading: new Icon(Icons.notifications,color: Colors.purple,),
               title: new Text("Notifications"),
             ),
@@ -220,10 +231,18 @@ class _MenuState extends State<Menu> {
           ],
         ),
       ),
-      body: wallpapersList != null?
-      new StaggeredGridView.countBuilder(
+      body: new Container(
+        width: MediaQuery.of(context).size.width,
+        decoration: new BoxDecoration(
+          gradient: new LinearGradient(colors: [
+            const Color(0xFFD6A4A4),
+            const Color(0xFFFFEDBC),
+          ])
+        ),
+        child: wallpapersList != null?
+        new StaggeredGridView.countBuilder(
           crossAxisCount: 4,
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(4.0),
           itemCount: wallpapersList.length,
           itemBuilder: (context,i){
             String imgPath = wallpapersList[i].data['url'];
@@ -235,19 +254,20 @@ class _MenuState extends State<Menu> {
                 child: new Hero(
                     tag: imgPath,
                     child: new FadeInImage(
-                        placeholder: new AssetImage("images/wallfy.png"),
-                        image: new NetworkImage(imgPath),
-                        fit: BoxFit.cover,
+                      placeholder: new AssetImage("images/wallfy.png"),
+                      image: new NetworkImage(imgPath),
+                      fit: BoxFit.cover,
                     )
                 ),
               ),
             );
           },
-        staggeredTileBuilder: (i) => new StaggeredTile.count(2, i.isEven?2:3),
-        mainAxisSpacing: 8.0,
-        crossAxisSpacing: 8.0,
-      ): new Center(
-        child: new CircularProgressIndicator(),
+          staggeredTileBuilder: (i) => new StaggeredTile.count(2, i.isEven?2:3),
+          mainAxisSpacing: 5.0,
+          crossAxisSpacing: 5.0,
+        ): new Center(
+          child: new CircularProgressIndicator(),
+        ),
       )
     );
   }
@@ -280,6 +300,13 @@ class _MenuState extends State<Menu> {
   void _stateVideos() {
     setState((){
       title='Videos';
+      _onPress();
+    });
+  }
+
+  void _stateFavorites() {
+    setState((){
+      title='Favorites';
       _onPress();
     });
   }
