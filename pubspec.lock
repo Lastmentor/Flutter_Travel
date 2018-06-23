@@ -432,7 +432,7 @@ packages:
   yaml:
     dependency: transitive
     description:
-      name: yamlph
+      name: yaml
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.13"
