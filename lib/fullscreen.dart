@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:photo_view/photo_view.dart';
 
 class ImagePage extends StatelessWidget {
 
-  String imgPath;
+  final String imgPath;
   ImagePage(this.imgPath);
 
   @override
@@ -17,7 +18,7 @@ class ImagePage extends StatelessWidget {
             children: <Widget>[
               new Align(
                 alignment: Alignment.center,
-                child: new Hero(tag: imgPath, child: new Image.network(imgPath)),
+                child: new PhotoView(imageProvider: new NetworkImage(imgPath)),
               ),
               new Align(
                 alignment: Alignment.topCenter,
@@ -40,3 +41,4 @@ class ImagePage extends StatelessWidget {
     );
   }
 }
+
