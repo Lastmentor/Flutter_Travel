@@ -25,6 +25,7 @@ class _MenuState extends State<Menu> {
 
   StreamSubscription<QuerySnapshot> subscription;
   List<DocumentSnapshot> wallpapersList;
+  List realData;
   final CollectionReference collectionReference = Firestore.instance.collection("Shared");
 
   @override
@@ -33,6 +34,7 @@ class _MenuState extends State<Menu> {
     subscription = collectionReference.snapshots().listen((datasnapshot) {
       setState(() {
         wallpapersList = datasnapshot.documents;
+        _listeFiltrele();
       });
     });
   }
@@ -239,13 +241,13 @@ class _MenuState extends State<Menu> {
             const Color(0xFFFFEDBC),
           ])
         ),
-        child: wallpapersList != null?
+        child: realData != null?
         new StaggeredGridView.countBuilder(
           crossAxisCount: 4,
           padding: const EdgeInsets.all(4.0),
-          itemCount: wallpapersList.length,
+          itemCount: realData.length,
           itemBuilder: (context,i){
-            String imgPath = wallpapersList[i].data['url'];
+            String imgPath = realData[i];
             return new Material(
               elevation: 8.0,
               borderRadius: new BorderRadius.all(new Radius.circular(8.0)),
@@ -279,6 +281,7 @@ class _MenuState extends State<Menu> {
   void _stateMyShared() {
     setState((){
       title='My Shared';
+      _listeFiltrele();
       _onPress();
     });
   }
@@ -286,6 +289,7 @@ class _MenuState extends State<Menu> {
   void _stateAll() {
     setState((){
       title='All';
+      _listeFiltrele();
       _onPress();
     });
   }
@@ -293,6 +297,7 @@ class _MenuState extends State<Menu> {
   void _statePhotos() {
     setState((){
       title='Photos';
+      _listeFiltrele();
       _onPress();
     });
   }
@@ -300,6 +305,7 @@ class _MenuState extends State<Menu> {
   void _stateVideos() {
     setState((){
       title='Videos';
+      _listeFiltrele();
       _onPress();
     });
   }
@@ -307,7 +313,33 @@ class _MenuState extends State<Menu> {
   void _stateFavorites() {
     setState((){
       title='Favorites';
+      _listeFiltrele();
       _onPress();
     });
+  }
+
+  void _listeFiltrele() {
+    String tempEmail;
+    widget.accountEmail == null ? tempEmail = widget.value.email : tempEmail = widget.accountEmail;
+    realData = new List();
+    for(int i=0;i<wallpapersList.length;i++){
+      if(title.toString() == "All"){
+        realData.add(wallpapersList[i].data['url']);
+      }
+      else if(title.toString() == "Photos"){
+        realData.add(wallpapersList[i].data['url']);
+      }
+      else if(title.toString() == "Videos"){
+        realData.add(wallpapersList[i].data['url']);
+      }
+      else if(title.toString() == "Favorites"){
+        realData.add(wallpapersList[i].data['url']);
+      }
+      else if(title.toString() == "My Shared"){
+        if(wallpapersList[i].data['email'] == tempEmail){
+          realData.add(wallpapersList[i].data['url']);
+        }
+      }
+    }
   }
 }
