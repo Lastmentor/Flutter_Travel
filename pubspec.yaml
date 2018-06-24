@@ -17,6 +17,7 @@ dependencies:
   firebase_storage:
   flutter_staggered_grid_view:
   photo_view:
+  url_launcher:
 
 dev_dependencies:
   flutter_test:
@@ -40,7 +41,7 @@ flutter:
    - images/twitter.png
    - images/logo.png
    - images/google.png
-   - images/wallfy.png
+   - images/l.png
   # To add assets to your application, add an assets section, like this:
   # assets:
   #  - images/a_dot_burr.jpeg
