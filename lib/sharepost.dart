@@ -11,8 +11,10 @@ class SharePost extends StatefulWidget {
 
   final FirebaseUser value;
   final String accountEmail;
+  final String accountPhoto;
+  final String accountName;
 
-  SharePost({Key key,this.value,this.accountEmail}) : super(key:key);
+  SharePost({Key key,this.value,this.accountEmail,this.accountPhoto,this.accountName}) : super(key:key);
 
   @override
   _SharePostState createState() => new _SharePostState();
@@ -97,9 +99,18 @@ class _SharePostState extends State<SharePost> {
 
   void _addData() async {
     _uploadDialog();
-
     String realEmail;
-    widget.accountEmail == null ? realEmail = widget.value.email : realEmail = widget.accountEmail;
+    String realPhoto;
+    String realName;
+    if(widget.accountEmail == null){
+      realEmail = widget.value.email;
+      realPhoto = widget.value.photoUrl;
+      realName = widget.value.displayName;
+    }else{
+      realEmail = widget.accountEmail;
+      realPhoto = widget.accountPhoto;
+      realName = widget.accountName;
+    }
     var now = new DateTime.now();
     final String rand1 = "${new Random().nextInt(10000)}";
     final String rand2 = "${new Random().nextInt(10000)}";
@@ -108,7 +119,7 @@ class _SharePostState extends State<SharePost> {
     final StorageUploadTask uploadTask = ref.put(_image);
     final Uri downloadUrl = (await uploadTask.future).downloadUrl;
 
-    documentReference.setData({'email': realEmail, 'text': textfield.text, 'time': now.toString().substring(0,16), 'url': downloadUrl.toString()});
+    documentReference.setData({'aurl': realPhoto, 'email': realEmail, 'name': realName, 'text': textfield.text, 'time': now.toString().substring(0,16), 'url': downloadUrl.toString()});
 
     _doneDialog();
 
