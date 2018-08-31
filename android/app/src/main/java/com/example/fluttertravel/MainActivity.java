@@ -1,4 +1,4 @@
-package com.yourcompany.flutterpictureapp;
+package com.example.fluttertravel;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;

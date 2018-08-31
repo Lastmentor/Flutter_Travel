@@ -7,20 +7,20 @@ import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:math';
 
-class SharePost extends StatefulWidget {
+class Sharepost extends StatefulWidget {
 
   final FirebaseUser value;
   final String accountEmail;
   final String accountPhoto;
   final String accountName;
 
-  SharePost({Key key,this.value,this.accountEmail,this.accountPhoto,this.accountName}) : super(key:key);
+  Sharepost({Key key,this.value,this.accountEmail,this.accountPhoto,this.accountName}) : super(key:key);
 
   @override
-  _SharePostState createState() => new _SharePostState();
+  _SharepostState createState() => _SharepostState();
 }
 
-class _SharePostState extends State<SharePost> {
+class _SharepostState extends State<Sharepost> {
 
   final DocumentReference documentReference = Firestore.instance.collection('Shared').document();
 
@@ -48,7 +48,7 @@ class _SharePostState extends State<SharePost> {
               icon: new Icon(
                   Icons.arrow_back_ios
               ),
-              onPressed: _back
+              onPressed: _back2
           ),
           title: new Text('Upload Image'),
         ),
@@ -72,13 +72,13 @@ class _SharePostState extends State<SharePost> {
                 ),
                 new Padding(padding: const EdgeInsets.only(top: 20.0)),
                 new MaterialButton(
-                      onPressed: getImage,
-                      height: 40.0,
-                      minWidth: 140.0,
-                      color: const Color(0xFF006633),
-                      textColor: Colors.white,
-                      child: new Text("Select an Image"),
-                    ),
+                  onPressed: getImage,
+                  height: 40.0,
+                  minWidth: 140.0,
+                  color: const Color(0xFF006633),
+                  textColor: Colors.white,
+                  child: new Text("Select an Image"),
+                ),
               ],
             )
           ],
@@ -94,6 +94,11 @@ class _SharePostState extends State<SharePost> {
   }
 
   void _back() {
+    Navigator.of(context).pop();
+    Navigator.of(context).pop();
+  }
+
+  void _back2() {
     Navigator.of(context).pop();
   }
 
@@ -111,6 +116,7 @@ class _SharePostState extends State<SharePost> {
       realPhoto = widget.accountPhoto;
       realName = widget.accountName;
     }
+
     var now = new DateTime.now();
     final String rand1 = "${new Random().nextInt(10000)}";
     final String rand2 = "${new Random().nextInt(10000)}";
@@ -166,7 +172,7 @@ class _SharePostState extends State<SharePost> {
     AlertDialog dialog = new AlertDialog(
       content: new Text("Upload Completed!",textAlign: TextAlign.center),
       actions: <Widget>[
-        new FlatButton(onPressed: () => Navigator.of(context).pop(), child: new Text("Close")),
+        new FlatButton(onPressed: () => _back(), child: new Text("Close")),
       ],
     );
     showDialog(context: context, barrierDismissible: false, child: dialog);

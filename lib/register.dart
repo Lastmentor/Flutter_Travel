@@ -4,12 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter_native_image/flutter_native_image.dart';
 import 'dart:math';
 
 class Register extends StatefulWidget {
+
   static const String routeName = "/Register";
+
   @override
-  _RegisterState createState() => new _RegisterState();
+  _RegisterState createState() => _RegisterState();
 }
 
 class _RegisterState extends State<Register> {
@@ -36,11 +39,10 @@ class _RegisterState extends State<Register> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return Scaffold(
       body: new Container(
         decoration: new BoxDecoration(
-          image: new DecorationImage(
-              image: new AssetImage("images/bg.jpg"), fit: BoxFit.cover),
+          image: new DecorationImage(image: new AssetImage("images/bg.jpg"),fit: BoxFit.cover),
         ),
         child: new Stack(
           children: <Widget>[
@@ -60,217 +62,225 @@ class _RegisterState extends State<Register> {
                   ],
                 ),
                 new Center(
-                    child: new Column(
+                  child: new Column(
                     children: <Widget>[
-                    new Container(
-                      width: 110.0,
-                      height: 110.0,
-                      child: _image == null
+                      new Container(
+                        width: 110.0,
+                        height: 110.0,
+                        child: _image == null
                         ?
-                      new DecoratedBox(
-                          decoration: BoxDecoration(
-                            border: new Border.all(
-                                color: const Color(0xFF006633), width: 2.0),
-                            image: new DecorationImage(
-                              image: new AssetImage(
-                                "images/addpic.png",
+                        new DecoratedBox(
+                            decoration: BoxDecoration(
+                              border: new Border.all(
+                                  color: const Color(0xFF006633), width: 2.0),
+                              image: new DecorationImage(
+                                image: new AssetImage(
+                                  "images/addpic.png",
+                                ),
                               ),
-                            ),
-                            color: const Color(0xFF003333),
-                          ))
-                        :
-                      new Image.file(_image,fit: BoxFit.cover,),
-                    ),
-                    new Padding(padding: const EdgeInsets.all(5.0)),
-                    new Opacity(
-                      opacity: 0.7,
-                      child: new Container(
-                        width: 115.0,
-                        height: 45.0,
-                        child: new RaisedButton(
-                          onPressed: getImage,
-                          child: new Text("Add Image",
-                              style: new TextStyle(
-                                  color: Colors.white, fontSize: 15.0)),
-                          color: const Color(0xFF006633),
-                          shape: new RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(30.0)),
+                              color: const Color(0xFF003333),
+                            ))
+                            :
+                        new Image.file(_image,fit: BoxFit.cover,),
+                      ),
+                      new Padding(padding: const EdgeInsets.all(5.0)),
+
+                      new Opacity(
+                        opacity: 0.7,
+                        child: new Container(
+                          width: 115.0,
+                          height: 45.0,
+                          child: new RaisedButton(
+                            onPressed: getImage,
+                            child: new Text("Add Image",
+                                style: new TextStyle(
+                                    color: Colors.white, fontSize: 15.0)),
+                            color: const Color(0xFF006633),
+                            shape: new RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.circular(30.0)),
+                          ),
                         ),
                       ),
-                    ),
-                    new Padding(padding: const EdgeInsets.all(7.0)),
-                    new Opacity(
+                      new Padding(padding: const EdgeInsets.all(7.0)),
+
+                      new Opacity(
+                          opacity: 0.7,
+                          child: new Container(
+                            width: 300.0,
+                            height: 55.0,
+                            child: new DecoratedBox(
+                              decoration: new BoxDecoration(
+                                borderRadius: new BorderRadius.all(
+                                    new Radius.circular(50.0)),
+                                color: const Color(0xFF003333),
+                              ),
+                              child: new ListTile(
+                                leading: const Icon(Icons.person_add,
+                                    color: Colors.white),
+                                title: new TextField(
+                                  controller: _nametextfield,
+                                  style: new TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18.0,
+                                  ),
+                                  decoration: new InputDecoration(
+                                    border: InputBorder.none,
+                                    hintText: "Your Name",
+                                    hintStyle: new TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )),
+                      new Padding(padding: const EdgeInsets.all(5.0)),
+
+                      new Opacity(
+                          opacity: 0.7,
+                          child: new Container(
+                            width: 300.0,
+                            height: 55.0,
+                            child: new DecoratedBox(
+                              decoration: new BoxDecoration(
+                                borderRadius: new BorderRadius.all(
+                                    new Radius.circular(50.0)),
+                                color: const Color(0xFF003333),
+                              ),
+                              child: new ListTile(
+                                leading:
+                                const Icon(Icons.mail, color: Colors.white),
+                                title: new TextField(
+                                  controller: _emailtextfield,
+                                  style: new TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18.0,
+                                  ),
+                                  decoration: new InputDecoration(
+                                    border: InputBorder.none,
+                                    hintText: "Email",
+                                    hintStyle: new TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )),
+                      new Padding(padding: const EdgeInsets.all(5.0)),
+
+                      new Opacity(
+                          opacity: 0.7,
+                          child: new Container(
+                            width: 300.0,
+                            height: 55.0,
+                            child: new DecoratedBox(
+                              decoration: new BoxDecoration(
+                                borderRadius: new BorderRadius.all(
+                                    new Radius.circular(50.0)),
+                                color: const Color(0xFF003333),
+                              ),
+                              child: new ListTile(
+                                leading:
+                                const Icon(Icons.person, color: Colors.white),
+                                title: new TextField(
+                                  controller: _usernametextfield,
+                                  style: new TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18.0,
+                                  ),
+                                  decoration: new InputDecoration(
+                                    border: InputBorder.none,
+                                    hintText: "Username",
+                                    hintStyle: new TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )),
+                      new Padding(padding: const EdgeInsets.all(5.0)),
+
+                      new Opacity(
+                          opacity: 0.7,
+                          child: new Container(
+                            width: 300.0,
+                            height: 55.0,
+                            child: new DecoratedBox(
+                              decoration: new BoxDecoration(
+                                borderRadius: new BorderRadius.all(
+                                    new Radius.circular(50.0)),
+                                color: const Color(0xFF003333),
+                              ),
+                              child: new ListTile(
+                                leading:
+                                const Icon(Icons.lock, color: Colors.white),
+                                title: new TextField(
+                                  controller: _passwordtextfield,
+                                  style: new TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18.0,
+                                  ),
+                                  decoration: new InputDecoration(
+                                    border: InputBorder.none,
+                                    hintText: "Password",
+                                    hintStyle: new TextStyle(color: Colors.white),
+                                  ),
+                                  obscureText: true,
+                                ),
+                              ),
+                            ),
+                          )),
+                      new Padding(padding: const EdgeInsets.all(5.0)),
+
+                      new Opacity(
+                          opacity: 0.7,
+                          child: new Container(
+                            width: 300.0,
+                            height: 55.0,
+                            child: new DecoratedBox(
+                              decoration: new BoxDecoration(
+                                borderRadius: new BorderRadius.all(
+                                    new Radius.circular(50.0)),
+                                color: const Color(0xFF003333),
+                              ),
+                              child: new ListTile(
+                                leading:
+                                const Icon(Icons.lock, color: Colors.white),
+                                title: new TextField(
+                                  controller: _repeatpasswordtextfield,
+                                  style: new TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18.0,
+                                  ),
+                                  decoration: new InputDecoration(
+                                    border: InputBorder.none,
+                                    hintText: "Repeat Password",
+                                    hintStyle: new TextStyle(color: Colors.white),
+                                  ),
+                                  obscureText: true,
+                                ),
+                              ),
+                            ),
+                          )),
+                      new Padding(padding: const EdgeInsets.all(5.0)),
+
+                      new Opacity(
                         opacity: 0.7,
                         child: new Container(
                           width: 300.0,
                           height: 55.0,
-                          child: new DecoratedBox(
-                            decoration: new BoxDecoration(
-                              borderRadius: new BorderRadius.all(
-                                  new Radius.circular(50.0)),
-                              color: const Color(0xFF003333),
-                            ),
-                            child: new ListTile(
-                              leading: const Icon(Icons.person_add,
-                                  color: Colors.white),
-                              title: new TextField(
-                                controller: _nametextfield,
+                          child: new RaisedButton(
+                            onPressed: _addData,
+                            child: new Text("CREATE ACCOUNT",
                                 style: new TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18.0,
-                                ),
-                                decoration: new InputDecoration(
-                                  border: InputBorder.none,
-                                  hintText: "Your Name",
-                                  hintStyle: new TextStyle(color: Colors.white),
-                                ),
-                              ),
-                            ),
+                                    color: Colors.white, fontSize: 20.0)),
+                            color: const Color(0xFF006633),
+                            shape: new RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.circular(30.0)),
                           ),
-                        )),
-                    new Padding(padding: const EdgeInsets.all(5.0)),
-                    new Opacity(
-                        opacity: 0.7,
-                        child: new Container(
-                          width: 300.0,
-                          height: 55.0,
-                          child: new DecoratedBox(
-                            decoration: new BoxDecoration(
-                              borderRadius: new BorderRadius.all(
-                                  new Radius.circular(50.0)),
-                              color: const Color(0xFF003333),
-                            ),
-                            child: new ListTile(
-                              leading:
-                                  const Icon(Icons.mail, color: Colors.white),
-                              title: new TextField(
-                                controller: _emailtextfield,
-                                style: new TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18.0,
-                                ),
-                                decoration: new InputDecoration(
-                                  border: InputBorder.none,
-                                  hintText: "Email",
-                                  hintStyle: new TextStyle(color: Colors.white),
-                                ),
-                              ),
-                            ),
-                          ),
-                        )),
-                    new Padding(padding: const EdgeInsets.all(5.0)),
-                    new Opacity(
-                        opacity: 0.7,
-                        child: new Container(
-                          width: 300.0,
-                          height: 55.0,
-                          child: new DecoratedBox(
-                            decoration: new BoxDecoration(
-                              borderRadius: new BorderRadius.all(
-                                  new Radius.circular(50.0)),
-                              color: const Color(0xFF003333),
-                            ),
-                            child: new ListTile(
-                              leading:
-                                  const Icon(Icons.person, color: Colors.white),
-                              title: new TextField(
-                                controller: _usernametextfield,
-                                style: new TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18.0,
-                                ),
-                                decoration: new InputDecoration(
-                                  border: InputBorder.none,
-                                  hintText: "Username",
-                                  hintStyle: new TextStyle(color: Colors.white),
-                                ),
-                              ),
-                            ),
-                          ),
-                        )),
-                    new Padding(padding: const EdgeInsets.all(5.0)),
-                    new Opacity(
-                        opacity: 0.7,
-                        child: new Container(
-                          width: 300.0,
-                          height: 55.0,
-                          child: new DecoratedBox(
-                            decoration: new BoxDecoration(
-                              borderRadius: new BorderRadius.all(
-                                  new Radius.circular(50.0)),
-                              color: const Color(0xFF003333),
-                            ),
-                            child: new ListTile(
-                              leading:
-                                  const Icon(Icons.lock, color: Colors.white),
-                              title: new TextField(
-                                controller: _passwordtextfield,
-                                style: new TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18.0,
-                                ),
-                                decoration: new InputDecoration(
-                                  border: InputBorder.none,
-                                  hintText: "Password",
-                                  hintStyle: new TextStyle(color: Colors.white),
-                                ),
-                                obscureText: true,
-                              ),
-                            ),
-                          ),
-                        )),
-                    new Padding(padding: const EdgeInsets.all(5.0)),
-                    new Opacity(
-                        opacity: 0.7,
-                        child: new Container(
-                          width: 300.0,
-                          height: 55.0,
-                          child: new DecoratedBox(
-                            decoration: new BoxDecoration(
-                              borderRadius: new BorderRadius.all(
-                                  new Radius.circular(50.0)),
-                              color: const Color(0xFF003333),
-                            ),
-                            child: new ListTile(
-                              leading:
-                                  const Icon(Icons.lock, color: Colors.white),
-                              title: new TextField(
-                                controller: _repeatpasswordtextfield,
-                                style: new TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18.0,
-                                ),
-                                decoration: new InputDecoration(
-                                  border: InputBorder.none,
-                                  hintText: "Repeat Password",
-                                  hintStyle: new TextStyle(color: Colors.white),
-                                ),
-                                obscureText: true,
-                              ),
-                            ),
-                          ),
-                        )),
-                    new Padding(padding: const EdgeInsets.all(5.0)),
-                    new Opacity(
-                      opacity: 0.7,
-                      child: new Container(
-                        width: 300.0,
-                        height: 55.0,
-                        child: new RaisedButton(
-                          onPressed: _addData,
-                          child: new Text("CREATE ACCOUNT",
-                              style: new TextStyle(
-                                  color: Colors.white, fontSize: 20.0)),
-                          color: const Color(0xFF006633),
-                          shape: new RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(30.0)),
                         ),
                       ),
-                    ),
-                  ],
-                ))
+                    ],
+                  ),
+                ),
               ],
-            ),
+            )
           ],
         ),
       ),
@@ -283,11 +293,13 @@ class _RegisterState extends State<Register> {
 
         _uploadDialog();
 
+        File compressedFile = await FlutterNativeImage.compressImage(_image.path, quality: 90, percentage: 80);
+
         final String rand1 = "${new Random().nextInt(10000)}";
         final String rand2 = "${new Random().nextInt(10000)}";
         final String rand3 = "${new Random().nextInt(10000)}";
         final StorageReference ref = FirebaseStorage.instance.ref().child('${rand1}_${rand2}_${rand3}.jpg');
-        final StorageUploadTask uploadTask = ref.put(_image);
+        final StorageUploadTask uploadTask = ref.put(compressedFile);
         final Uri downloadUrl = (await uploadTask.future).downloadUrl;
 
         documentReference.setData({ 'email': _emailtextfield.text, 'name': _nametextfield.text, 'password': _passwordtextfield.text, 'photo': downloadUrl.toString() , 'username': _usernametextfield.text});
@@ -373,4 +385,5 @@ class _RegisterState extends State<Register> {
     showDialog(context: context, barrierDismissible: false, child: dialog);
     checkUpload = false;
   }
+
 }

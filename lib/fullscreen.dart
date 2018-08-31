@@ -20,20 +20,31 @@ class ImagePage extends StatelessWidget {
                 alignment: Alignment.center,
                 child: new PhotoView(imageProvider: new NetworkImage(imgPath)),
               ),
-              new Align(
-                alignment: Alignment.topCenter,
-                child: new Column(
+              new Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    new AppBar(
-                      elevation: 0.0,
-                      backgroundColor: Colors.transparent,
-                      leading: new IconButton(icon: new Icon(Icons.arrow_back_ios,color: Colors.red,size: 30.0,), onPressed: () => Navigator.of(context).pop()),
-                    )
+                    new GestureDetector(
+                      onTap: () => Navigator.of(context).pop(),
+                      child: new Opacity(
+                          opacity: 0.7,
+                          child: new Container(
+                          width: 40.0,
+                          height: 40.0,
+                          margin: const EdgeInsets.only(top: 35.0,left: 15.0),
+                          decoration: new BoxDecoration(
+                            image: new DecorationImage(
+                                image: new AssetImage("images/kapat.png"),
+                                fit: BoxFit.cover
+                            ),
+                            color: const Color(0xFF696969),
+                            borderRadius: new BorderRadius.circular(30.0)
+                          ),
+                        ),
+                      )
+                    ),
                   ],
                 ),
-              ),
             ],
           ),
         ),
@@ -41,4 +52,3 @@ class ImagePage extends StatelessWidget {
     );
   }
 }
-

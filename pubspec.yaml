@@ -1,4 +1,4 @@
-name: flutter_picture_app
+name: flutter_travel
 description: A new Flutter project.
 
 dependencies:
@@ -11,13 +11,14 @@ dependencies:
   image_picker:
   firebase_auth:
   google_sign_in:
-  firebase_database:
   flutter_twitter_login:
-  cloud_firestore:
   firebase_storage:
+  cloud_firestore:
   flutter_staggered_grid_view:
-  photo_view:
   url_launcher:
+  photo_view:
+  flutter_native_image:
+      git: https://github.com/btastic/flutter_native_image.git
 
 dev_dependencies:
   flutter_test:
@@ -35,13 +36,16 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
-   - images/bg.jpg
-   - images/addpic.png
-   - images/facebook.png
-   - images/twitter.png
-   - images/logo.png
-   - images/google.png
-   - images/l.png
+    - images/bg.jpg
+    - images/logo.png
+    - images/facebook.png
+    - images/google.png
+    - images/twitter.png
+    - images/addpic.png
+    - images/placeh.png
+    - images/close.png
+    - images/kapat.png
+
   # To add assets to your application, add an assets section, like this:
   # assets:
   #  - images/a_dot_burr.jpeg
